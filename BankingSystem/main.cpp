@@ -6,29 +6,89 @@
  */
 
 #include<iostream>
+#include<cstring>
 
 using namespace::std;
 
 #define NAME_LEN 20
 
-typedef struct {
+class Account{
+public:
+	Account();
+	Account(int _iId, int _iBalance, char* _pchName);
+	~Account();
+
+private:
 	int iId;
 	int iBalance;
-	char chName[NAME_LEN];
-}Account;
+	char *pchName;
 
-Account g_astAccount[100];
+public:
+	int getId();
+	int getBalance();
+	char* getName();
+	void deposit(int _iBalance);
+	void withraw(int _iBalance);
+	void showInfo();
+};
+
+Account::Account(int _iId, int _iBalance, char* _pchName)
+{
+	this->iId = _iId;
+	this->iBalance = _iBalance;
+	this->pchName = new char[strlen(_pchName)+1];
+	strcpy(this->pchName, _pchName);
+}
+
+Account::~Account()
+{
+	delete []pchName;
+}
+
+int Account::getId()
+{
+	return iId;
+}
+
+int Account::getBalance()
+{
+	return iBalance;
+}
+
+char* Account::getName()
+{
+	return pchName;
+}
+
+void Account::deposit(int _iBalance)
+{
+	iBalance += _iBalance;
+}
+
+void Account::withraw(int _iBalance)
+{
+	iBalance -= _iBalance;
+}
+
+void Account::showInfo()
+{
+	cout<<"----- ----- ----- -----"<<endl;
+	cout<<"계좌 ID : "<<iId<<endl;
+	cout<<"고객 이름 : "<<pchName<<endl;
+	cout<<"잔    액 :"<<iBalance<<endl;
+}
+
 int iIndex = 0;
 
 void printMenu();
-void makeAccount();
-void deposit();
-void withraw();
-void inquire();
+void makeAccount(Account** pcAccount);
+void deposit(Account** pcAccount);
+void withraw(Account** pcAccount);
+void inquire(Account** pcAccount);
 
 enum {
 	EXIT = 0,
-	MAKE = 1,
+	MAKE,
 	DEPOSIT,
 	WITHRAW,
 	INQUIRE
@@ -36,22 +96,23 @@ enum {
 
 int main()
 {
-	int iSelect;
-	while(1){
+	int iSelect=-1;
+	Account *pcAccount[100];
+	while(iSelect!=0){
 		printMenu();
 		cin>>iSelect;
 		switch(iSelect){
 		case 1:
-			makeAccount();
+			makeAccount(pcAccount);
 			break;
 		case 2:
-			deposit();
+			deposit(pcAccount);
 			break;
 		case 3:
-			withraw();
+			withraw(pcAccount);
 			break;
 		case 4:
-			inquire();
+			inquire(pcAccount);
 			break;
 		case 0:
 			cout<<"은행 계좌 관리 프로그램을 종료합니다."<<endl;
@@ -71,64 +132,60 @@ void printMenu()
 	cout<<"0. 나가기"<<endl;
 }
 
-void makeAccount()
+void makeAccount(Account** pcAccount)
 {
+	int iId;
+	int iBalance;
+	char chName[NAME_LEN];
 	cout<<"##### 계좌 개설 #####"<<endl;
 	cout<<"1. 계좌 ID : ";
-	cin>>g_astAccount[iIndex].iId;
+	cin>>iId;
 	cout<<"2. 이    름 : ";
-	cin>>g_astAccount[iIndex].chName;
+	cin>>chName;
 	cout<<"3. 입 금 액 : ";
-	cin>>g_astAccount[iIndex].iBalance;
-	iIndex++;
+	cin>>iBalance;
+	pcAccount[iIndex++] = new Account(iId, iBalance, chName);
 }
 
-void deposit()
+void deposit(Account** pcAccount)
 {
 	int iId, iBalance;
 	int i;
 	cout<<"입금 계좌 ID : ";
 	cin>>iId;
 	for(i=0; i<iIndex; i++){
-		cout<<"deposit() "<<__LINE__<<endl;
-		if(iId == g_astAccount[i].iId){
+		if(iId == pcAccount[i]->getId()){
 			cout<<"입금 금액 : ";
 			cin >> iBalance;
-			cout<<"deposit() "<<__LINE__<<endl;
 			if(iBalance<=0){
 				cout<<"입금 금액은 0보다 커야합니다."<<endl;
 			}else{
-				g_astAccount[i].iBalance += iBalance;
+				pcAccount[i]->deposit(iBalance);
 			}
-			cout<<"deposit() "<<__LINE__<<endl;
 			break;
 		}
 	}
-	cout<<"deposit() "<<__LINE__<<endl;
 	if(i == iIndex){
 		cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
 	}
-	cout<<"deposit() "<<__LINE__<<endl;
 }
 
-void withraw()
+void withraw(Account** pcAccount)
 {
 	int iId, iBalance;
 	int i;
 	cout<<"출금 계좌 ID : ";
 	cin>>iId;
 	for(i=0; i<iIndex; i++){
-		if(iId == g_astAccount[i].iId){
+		if(iId == pcAccount[i]->getId()){
 			cout<<"출금 금액 : ";
 			cin >> iBalance;
 			if(iBalance<=0){
 				cout<<"출금 금액은 0보다 커야합니다."<<endl;
+			}else if(iBalance > pcAccount[i]->getBalance()){
+				cout<<"잔액이 부족합니다."<<endl;
 			}else{
-				if(iBalance > g_astAccount[i].iBalance){
-					cout<<"잔액이 부족합니다."<<endl;
-				}else{
-					g_astAccount[i].iBalance -= iBalance;
-				}
+				pcAccount[i]->withraw(iBalance);
 			}
 			break;
 		}
@@ -138,12 +195,10 @@ void withraw()
 	}
 }
 
-void inquire()
+void inquire(Account** pcAccount)
 {
 	cout<<"##### 전체 고객 잔액 조회 #####"<<endl;
 	for(int i=0; i<iIndex; i++){
-		cout<<"계좌 ID : "<<g_astAccount[i].iId<<endl;
-		cout<<"고객 이름 : "<<g_astAccount[i].chName<<endl;
-		cout<<"잔    액 :"<<g_astAccount[i].iBalance<<endl;
+		pcAccount[i]->showInfo();
 	}
 }

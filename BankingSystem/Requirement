@@ -1,6 +1,6 @@
 # Requirement Specification
 
-## 1. OOP Project Step1
+## 1. OOP Project Version1
 ###  1.1 기능
 <pre>
 	계좌 개설
@@ -16,3 +16,8 @@
 	고객의 계좌에 관한 정보는 계좌번호, 고객이름, 고객의 잔액 이렇게 3가지만 저장 및 관리한다.
 	저장의 형태는 배열을 사용한다.
 </pre>
+
+## 2. OOP Project Version2
+### 2.1 Version1에서 Account구조체 안에 고객이름을 배열로 저장하였지만 Version2에서 Account 클래스로 변경하고, 고객이름을 문자열 포인터로 가진다.
+
+  
