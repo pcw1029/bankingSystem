@@ -16,6 +16,7 @@ class Account{
 public:
 	Account();
 	Account(int _iId, int _iBalance, char* _pchName);
+	Account(const Account& cAccount);
 	~Account();
 
 private:
@@ -38,6 +39,14 @@ Account::Account(int _iId, int _iBalance, char* _pchName)
 	this->iBalance = _iBalance;
 	this->pchName = new char[strlen(_pchName)+1];
 	strcpy(this->pchName, _pchName);
+}
+
+Account::Account(const Account& cAccount)
+{
+	this->iId = cAccount.iId;
+	this->iBalance = cAccount.iBalance;
+	this->pchName = new char[strlen(cAccount.pchName)+1];
+	strcpy(this->pchName, cAccount.pchName);
 }
 
 Account::~Account()
