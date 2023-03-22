@@ -25,12 +25,12 @@ private:
 	char *pchName;
 
 public:
-	int getId();
-	int getBalance();
-	char* getName();
+	int getId() const;
+	int getBalance() const;
+	const char* getName() const;
 	void deposit(int _iBalance);
 	void withraw(int _iBalance);
-	void showInfo();
+	void showInfo() const;
 };
 
 Account::Account(int _iId, int _iBalance, char* _pchName)
@@ -54,17 +54,17 @@ Account::~Account()
 	delete []pchName;
 }
 
-int Account::getId()
+int Account::getId() const
 {
 	return iId;
 }
 
-int Account::getBalance()
+int Account::getBalance() const
 {
 	return iBalance;
 }
 
-char* Account::getName()
+const char* Account::getName() const
 {
 	return pchName;
 }
@@ -79,7 +79,7 @@ void Account::withraw(int _iBalance)
 	iBalance -= _iBalance;
 }
 
-void Account::showInfo()
+void Account::showInfo() const
 {
 	cout<<"----- ----- ----- -----"<<endl;
 	cout<<"계좌 ID : "<<iId<<endl;
