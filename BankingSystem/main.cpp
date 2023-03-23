@@ -12,6 +12,14 @@ using namespace::std;
 
 #define NAME_LEN 20
 
+enum {
+	EXIT = 0,
+	MAKE,
+	DEPOSIT,
+	WITHRAW,
+	INQUIRE
+};
+
 class Account{
 public:
 	Account();
@@ -87,51 +95,34 @@ void Account::showInfo() const
 	cout<<"잔    액 :"<<iBalance<<endl;
 }
 
-int iIndex = 0;
-
-void printMenu();
-void makeAccount(Account** pcAccount);
-void deposit(Account** pcAccount);
-void withraw(Account** pcAccount);
-void inquire(Account** pcAccount);
-
-enum {
-	EXIT = 0,
-	MAKE,
-	DEPOSIT,
-	WITHRAW,
-	INQUIRE
-};
-
-int main()
-{
-	int iSelect=-1;
+class AccManager {
+private:
+	int iIndex;
 	Account *pcAccount[100];
-	while(iSelect!=0){
-		printMenu();
-		cin>>iSelect;
-		switch(iSelect){
-		case 1:
-			makeAccount(pcAccount);
-			break;
-		case 2:
-			deposit(pcAccount);
-			break;
-		case 3:
-			withraw(pcAccount);
-			break;
-		case 4:
-			inquire(pcAccount);
-			break;
-		case 0:
-			cout<<"은행 계좌 관리 프로그램을 종료합니다."<<endl;
-			break;
+
+
+public:
+	AccManager();
+	~AccManager(){
+		for(int i=0; i<iIndex; i++){
+			delete [] pcAccount[i];
 		}
 	}
 
+public:
+	void printMenu() const;
+	void makeAccount();
+	void deposit();
+	void withraw();
+	void inquire() const;
+	int getIndex() const;
+};
+
+AccManager::AccManager(){
+	iIndex = 0;
 }
 
-void printMenu()
+void AccManager::printMenu() const
 {
 	cout<<"##### MENU #####"<<endl;
 	cout<<"1. 계좌개설"<<endl;
@@ -141,7 +132,7 @@ void printMenu()
 	cout<<"0. 나가기"<<endl;
 }
 
-void makeAccount(Account** pcAccount)
+void AccManager::makeAccount()
 {
 	int iId;
 	int iBalance;
@@ -156,7 +147,7 @@ void makeAccount(Account** pcAccount)
 	pcAccount[iIndex++] = new Account(iId, iBalance, chName);
 }
 
-void deposit(Account** pcAccount)
+void AccManager::deposit()
 {
 	int iId, iBalance;
 	int i;
@@ -179,7 +170,7 @@ void deposit(Account** pcAccount)
 	}
 }
 
-void withraw(Account** pcAccount)
+void AccManager::withraw()
 {
 	int iId, iBalance;
 	int i;
@@ -204,10 +195,42 @@ void withraw(Account** pcAccount)
 	}
 }
 
-void inquire(Account** pcAccount)
+void AccManager::inquire() const
 {
 	cout<<"##### 전체 고객 잔액 조회 #####"<<endl;
 	for(int i=0; i<iIndex; i++){
 		pcAccount[i]->showInfo();
 	}
 }
+
+
+
+
+int main()
+{
+	int iSelect=-1;
+	AccManager cAccManager;
+	while(iSelect!=0){
+		cAccManager.printMenu();
+		cin>>iSelect;
+		switch(iSelect){
+		case 1:
+			cAccManager.makeAccount();
+			break;
+		case 2:
+			cAccManager.deposit();
+			break;
+		case 3:
+			cAccManager.withraw();
+			break;
+		case 4:
+			cAccManager.inquire();
+			break;
+		case 0:
+			cout<<"은행 계좌 관리 프로그램을 종료합니다."<<endl;
+			break;
+		}
+	}
+
+}
+
