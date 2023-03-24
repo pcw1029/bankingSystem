@@ -25,7 +25,7 @@ public:
 	Account();
 	Account(int _iId, int _iBalance, char* _pchName);
 	Account(const Account& cAccount);
-	~Account();
+	virtual ~Account();
 
 private:
 	int iId;
@@ -36,10 +36,18 @@ public:
 	int getId() const;
 	int getBalance() const;
 	const char* getName() const;
-	void deposit(int _iBalance);
+	virtual void deposit(int _iBalance);
 	void withraw(int _iBalance);
-	void showInfo() const;
+	virtual void showInfo() const;
 };
+
+Account::Account()
+{
+	iId = 0;
+	iBalance = 0;
+	pchName = new char[strlen("no_name")];
+	strcpy(pchName, "no_name");
+}
 
 Account::Account(int _iId, int _iBalance, char* _pchName)
 {
@@ -95,6 +103,54 @@ void Account::showInfo() const
 	cout<<"잔    액 :"<<iBalance<<endl;
 }
 
+
+class CreditAcc : public Account
+{
+public:
+	CreditAcc(int _iId, int _iBalance, char* _pchName);
+	virtual void deposit(int iBalance);
+};
+
+CreditAcc::CreditAcc(int _iId, int _iBalance, char* _pchName) \
+		:Account(_iId, (_iBalance*0.01)+_iBalance, _pchName){
+	cout<<"신용 계좌 계설"<<endl;
+}
+
+void CreditAcc::deposit(int _iBalance)
+{
+	Account::deposit(_iBalance +(_iBalance*0.01));
+}
+
+
+class DonationAcc : public Account
+{
+private:
+	int iTotalDonationMoney;
+public:
+	DonationAcc(int _iId, int _iBalance, char* _pchName);
+	virtual void deposit(int _iBalance);
+	virtual void showInfo() const;
+};
+
+DonationAcc::DonationAcc(int _iId, int _iBalance, char* _pchName) \
+		: Account(_iId, _iBalance, _pchName)
+{
+	cout<<"기부 계좌 계설"<<endl;
+	iTotalDonationMoney = _iBalance*0.01;
+}
+
+void DonationAcc::deposit(int _iBalance)
+{
+	Account::deposit(_iBalance);
+	iTotalDonationMoney += (_iBalance * 0.01);
+}
+
+void DonationAcc::showInfo() const
+{
+	Account::showInfo();
+	cout<<"총 기부 금액 : "<<iTotalDonationMoney<<endl;
+}
+
 class AccManager {
 private:
 	int iIndex;
@@ -136,15 +192,28 @@ void AccManager::makeAccount()
 {
 	int iId;
 	int iBalance;
+	int iSelectKindOfAccount;
 	char chName[NAME_LEN];
 	cout<<"##### 계좌 개설 #####"<<endl;
+	cout<<"1. 신용계좌"<<endl;
+	cout<<"2. 기부계좌"<<endl;
+	cout<<"계좌개서 종류 선택 : ";
+	cin>>iSelectKindOfAccount;
+	if(iSelectKindOfAccount < 0 || iSelectKindOfAccount > 2){
+		cout<<"계좌개설 종류 선택이 잘못되었습니다. 다시 진행해 주세요."<<endl;
+		return;
+	}
 	cout<<"1. 계좌 ID : ";
 	cin>>iId;
 	cout<<"2. 이    름 : ";
 	cin>>chName;
 	cout<<"3. 입 금 액 : ";
 	cin>>iBalance;
-	pcAccount[iIndex++] = new Account(iId, iBalance, chName);
+	if(iSelectKindOfAccount == 1)
+		pcAccount[iIndex++] = new CreditAcc(iId, iBalance, chName);
+	else
+		pcAccount[iIndex++] = new DonationAcc(iId, iBalance, chName);
+
 }
 
 void AccManager::deposit()
