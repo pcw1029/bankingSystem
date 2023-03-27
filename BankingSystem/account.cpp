@@ -40,6 +40,16 @@ Account::~Account()
 	delete []pchName;
 }
 
+Account& Account::operator =(const Account &cAccount)
+{
+	delete [] this->pchName;
+	this->pchName = new char[strlen(cAccount.pchName)];
+	strcpy(this->pchName, cAccount.pchName);
+	this->iBalance = cAccount.iBalance;
+	this->iId = cAccount.iId;
+	return *this;
+}
+
 int Account::getId() const
 {
 	return iId;

@@ -10,6 +10,8 @@
 
 #include "donationAcc.h"
 #include "creditAcc.h"
+#include "container.h"
+#include "normalAcc.h"
 
 enum {
 	EXIT = 0,
@@ -21,25 +23,17 @@ enum {
 
 class AccManager {
 private:
-	int iIndex;
-	Account *pcAccount[100];
-
+	Container cContainer;
+	int iAccountNum;
 
 public:
 	AccManager();
-	~AccManager(){
-		for(int i=0; i<iIndex; i++){
-			delete [] pcAccount[i];
-		}
-	}
-
-public:
 	void printMenu() const;
 	void makeAccount();
 	void deposit();
 	void withraw();
-	void inquire() const;
-	int getIndex() const;
+	void inquire();
+	int getIndex();
 };
 
 

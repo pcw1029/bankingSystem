@@ -14,8 +14,8 @@ using namespace::std;
 
 #define NAME_LEN 20
 
-AccManager::AccManager(){
-	iIndex = 0;
+AccManager::AccManager():iAccountNum(0)
+{
 }
 
 void AccManager::printMenu() const
@@ -35,11 +35,12 @@ void AccManager::makeAccount()
 	int iSelectKindOfAccount;
 	char chName[NAME_LEN];
 	cout<<"##### 계좌 개설 #####"<<endl;
-	cout<<"1. 신용계좌"<<endl;
-	cout<<"2. 기부계좌"<<endl;
+	cout<<"1. 일반계좌"<<endl;
+	cout<<"2. 신용계좌"<<endl;
+	cout<<"3. 기부계좌"<<endl;
 	cout<<"계좌개서 종류 선택 : ";
 	cin>>iSelectKindOfAccount;
-	if(iSelectKindOfAccount < 0 || iSelectKindOfAccount > 2){
+	if(iSelectKindOfAccount < 0 || iSelectKindOfAccount > 3){
 		cout<<"계좌개설 종류 선택이 잘못되었습니다. 다시 진행해 주세요."<<endl;
 		return;
 	}
@@ -49,65 +50,70 @@ void AccManager::makeAccount()
 	cin>>chName;
 	cout<<"3. 입 금 액 : ";
 	cin>>iBalance;
-	if(iSelectKindOfAccount == 1)
-		pcAccount[iIndex++] = new CreditAcc(iId, iBalance, chName);
-	else
-		pcAccount[iIndex++] = new DonationAcc(iId, iBalance, chName);
+	if(iSelectKindOfAccount == 1){
+		cContainer.insert(new NormalAcc(iId, iBalance, chName));
+	}else if(iSelectKindOfAccount == 2){
+		cContainer.insert(new CreditAcc(iId, iBalance, chName));
+	}else{
+		cContainer.insert(new DonationAcc(iId, iBalance, chName));
+	}
 
 }
 
 void AccManager::deposit()
 {
+	Element element;
 	int iId, iBalance;
-	int i;
 	cout<<"입금 계좌 ID : ";
 	cin>>iId;
-	for(i=0; i<iIndex; i++){
-		if(iId == pcAccount[i]->getId()){
+	for(int i=0; i<cContainer.getElementTotCount(); i++){
+		element = cContainer.getItem(i);
+		if(element->getId() == iId){
 			cout<<"입금 금액 : ";
 			cin >> iBalance;
 			if(iBalance<=0){
 				cout<<"입금 금액은 0보다 커야합니다."<<endl;
 			}else{
-				pcAccount[i]->deposit(iBalance);
+				element->deposit(iBalance);
+				cout<<"입금 완료"<<endl;
 			}
-			break;
+			return;
 		}
 	}
-	if(i == iIndex){
-		cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
-	}
+	cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
 }
 
 void AccManager::withraw()
 {
+	Element element;
 	int iId, iBalance;
-	int i;
 	cout<<"출금 계좌 ID : ";
 	cin>>iId;
-	for(i=0; i<iIndex; i++){
-		if(iId == pcAccount[i]->getId()){
+	for(int i=0; i<cContainer.getElementTotCount(); i++){
+		element = cContainer.getItem(i);
+		if(element->getId() == iId){
 			cout<<"출금 금액 : ";
 			cin >> iBalance;
 			if(iBalance<=0){
 				cout<<"출금 금액은 0보다 커야합니다."<<endl;
-			}else if(iBalance > pcAccount[i]->getBalance()){
+			}else if(iBalance > element->getBalance()){
 				cout<<"잔액이 부족합니다."<<endl;
 			}else{
-				pcAccount[i]->withraw(iBalance);
+				element->withraw(iBalance);
+				cout<<"출금 완료"<<endl;
 			}
-			break;
+			return;
 		}
 	}
-	if(i == iIndex){
-		cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
-	}
+	cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
 }
 
-void AccManager::inquire() const
+void AccManager::inquire()
 {
+	Element element;
 	cout<<"##### 전체 고객 잔액 조회 #####"<<endl;
-	for(int i=0; i<iIndex; i++){
-		pcAccount[i]->showInfo();
+	for(int i=0; i<cContainer.getElementTotCount(); i++){
+		element = cContainer.getItem(i);
+		element->showInfo();
 	}
 }

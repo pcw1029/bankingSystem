@@ -14,7 +14,7 @@ public:
 	Account(int _iId, int _iBalance, char* _pchName);
 	Account(const Account& cAccount);
 	virtual ~Account();
-
+	Account& operator=(const Account &cAccount);
 private:
 	int iId;
 	int iBalance;
