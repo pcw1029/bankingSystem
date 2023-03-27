@@ -10,8 +10,8 @@
 
 using namespace::std;
 
-CreditAcc::CreditAcc(int _iId, int _iBalance, char* _pchName) \
-		:Account(_iId, (_iBalance*0.01)+_iBalance, _pchName){
+CreditAcc::CreditAcc(int _iId, int _iBalance, String cStrName) \
+		:Account(_iId, (_iBalance*0.01)+_iBalance, cStrName){
 	cout<<"신용 계좌 계설"<<endl;
 }
 

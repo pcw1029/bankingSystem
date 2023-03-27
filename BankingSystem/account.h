@@ -8,22 +8,19 @@
 #ifndef ACCOUNT_H_
 #define ACCOUNT_H_
 
+#include "String.h"
 class Account{
 public:
-	Account();
-	Account(int _iId, int _iBalance, char* _pchName);
-	Account(const Account& cAccount);
-	virtual ~Account();
-	Account& operator=(const Account &cAccount);
+	Account(int _iId, int _iBalance, String _cStrName);
 private:
 	int iId;
 	int iBalance;
-	char *pchName;
+	String cStrName;
 
 public:
 	int getId() const;
 	int getBalance() const;
-	const char* getName() const;
+	const String& getName() const;
 	virtual void deposit(int _iBalance);
 	void withraw(int _iBalance);
 	virtual void showInfo() const;

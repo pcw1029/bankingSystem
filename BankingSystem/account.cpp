@@ -10,44 +10,11 @@
 #include<iostream>
 
 using namespace::std;
-
-Account::Account()
-{
-	iId = 0;
-	iBalance = 0;
-	pchName = new char[strlen("no_name")];
-	strcpy(pchName, "no_name");
-}
-
-Account::Account(int _iId, int _iBalance, char* _pchName)
+Account::Account(int _iId, int _iBalance, String _cStrName)
 {
 	this->iId = _iId;
 	this->iBalance = _iBalance;
-	this->pchName = new char[strlen(_pchName)+1];
-	strcpy(this->pchName, _pchName);
-}
-
-Account::Account(const Account& cAccount)
-{
-	this->iId = cAccount.iId;
-	this->iBalance = cAccount.iBalance;
-	this->pchName = new char[strlen(cAccount.pchName)+1];
-	strcpy(this->pchName, cAccount.pchName);
-}
-
-Account::~Account()
-{
-	delete []pchName;
-}
-
-Account& Account::operator =(const Account &cAccount)
-{
-	delete [] this->pchName;
-	this->pchName = new char[strlen(cAccount.pchName)];
-	strcpy(this->pchName, cAccount.pchName);
-	this->iBalance = cAccount.iBalance;
-	this->iId = cAccount.iId;
-	return *this;
+	this->cStrName = _cStrName;
 }
 
 int Account::getId() const
@@ -60,9 +27,9 @@ int Account::getBalance() const
 	return iBalance;
 }
 
-const char* Account::getName() const
+const String& Account::getName() const
 {
-	return pchName;
+	return cStrName;
 }
 
 void Account::deposit(int _iBalance)
@@ -79,6 +46,6 @@ void Account::showInfo() const
 {
 	cout<<"----- ----- ----- -----"<<endl;
 	cout<<"계좌 ID : "<<iId<<endl;
-	cout<<"고객 이름 : "<<pchName<<endl;
+	cout<<"고객 이름 : "<<cStrName<<endl;
 	cout<<"잔    액 :"<<iBalance<<endl;
 }

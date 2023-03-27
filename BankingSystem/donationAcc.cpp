@@ -11,8 +11,8 @@
 using namespace::std;
 
 
-DonationAcc::DonationAcc(int _iId, int _iBalance, char* _pchName) \
-		: Account(_iId, _iBalance, _pchName)
+DonationAcc::DonationAcc(int _iId, int _iBalance, String cStrName) \
+		: Account(_iId, _iBalance, cStrName)
 {
 	cout<<"기부 계좌 계설"<<endl;
 	iTotalDonationMoney = _iBalance*0.01;

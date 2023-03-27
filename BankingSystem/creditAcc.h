@@ -14,7 +14,7 @@
 class CreditAcc : public Account
 {
 public:
-	CreditAcc(int _iId, int _iBalance, char* _pchName);
+	CreditAcc(int _iId, int _iBalance, String cStrName);
 	virtual void deposit(int iBalance);
 };
 

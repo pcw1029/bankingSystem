@@ -12,7 +12,7 @@
 
 class NormalAcc : public Account{
 public:
-	NormalAcc(int _iId, int _iBalance, char* _pchName);
+	NormalAcc(int _iId, int _iBalance, String cStrName);
 	virtual void deposit(int _iBalance);
 	virtual void showInfo() const;
 };

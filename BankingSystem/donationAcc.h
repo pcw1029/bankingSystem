@@ -16,7 +16,7 @@ class DonationAcc : public Account
 private:
 	int iTotalDonationMoney;
 public:
-	DonationAcc(int _iId, int _iBalance, char* _pchName);
+	DonationAcc(int _iId, int _iBalance, String cStrName);
 	virtual void deposit(int _iBalance);
 	virtual void showInfo() const;
 };

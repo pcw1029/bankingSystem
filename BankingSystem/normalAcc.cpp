@@ -10,8 +10,8 @@
 
 using namespace std;
 
-NormalAcc::NormalAcc(int _iId, int _iBalance, char* _pchName)\
-		:Account(_iId, _iBalance, _pchName)
+NormalAcc::NormalAcc(int _iId, int _iBalance, String cStrName)\
+		:Account(_iId, _iBalance, cStrName)
 {
 	cout<<"일반 계좌 계설"<<endl;
 }
