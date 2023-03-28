@@ -23,7 +23,7 @@ enum {
 
 class AccManager {
 private:
-	Container cContainer;
+	Container<Account *> cContainer;
 	int iAccountNum;
 
 public:

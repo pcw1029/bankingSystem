@@ -62,19 +62,17 @@ void AccManager::makeAccount()
 
 void AccManager::deposit()
 {
-	Element element;
 	int iId, iBalance;
 	cout<<"입금 계좌 ID : ";
 	cin>>iId;
 	for(int i=0; i<cContainer.getElementTotCount(); i++){
-		element = cContainer.getItem(i);
-		if(element->getId() == iId){
+		if(cContainer.getItem(i)->getId() == iId){
 			cout<<"입금 금액 : ";
 			cin >> iBalance;
 			if(iBalance<=0){
 				cout<<"입금 금액은 0보다 커야합니다."<<endl;
 			}else{
-				element->deposit(iBalance);
+				cContainer.getItem(i)->deposit(iBalance);
 				cout<<"입금 완료"<<endl;
 			}
 			return;
@@ -85,21 +83,19 @@ void AccManager::deposit()
 
 void AccManager::withraw()
 {
-	Element element;
 	int iId, iBalance;
 	cout<<"출금 계좌 ID : ";
 	cin>>iId;
 	for(int i=0; i<cContainer.getElementTotCount(); i++){
-		element = cContainer.getItem(i);
-		if(element->getId() == iId){
+		if(cContainer.getItem(i)->getId() == iId){
 			cout<<"출금 금액 : ";
 			cin >> iBalance;
 			if(iBalance<=0){
 				cout<<"출금 금액은 0보다 커야합니다."<<endl;
-			}else if(iBalance > element->getBalance()){
+			}else if(iBalance > cContainer.getItem(i)->getBalance()){
 				cout<<"잔액이 부족합니다."<<endl;
 			}else{
-				element->withraw(iBalance);
+				cContainer.getItem(i)->withraw(iBalance);
 				cout<<"출금 완료"<<endl;
 			}
 			return;
@@ -110,10 +106,8 @@ void AccManager::withraw()
 
 void AccManager::inquire()
 {
-	Element element;
 	cout<<"##### 전체 고객 잔액 조회 #####"<<endl;
 	for(int i=0; i<cContainer.getElementTotCount(); i++){
-		element = cContainer.getItem(i);
-		element->showInfo();
+		cContainer.getItem(i)->showInfo();
 	}
 }
