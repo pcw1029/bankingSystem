@@ -6,6 +6,7 @@
  */
 
 #include "account.h"
+#include "exception.h"
 #include<cstring>
 #include<iostream>
 
@@ -34,11 +35,19 @@ const String& Account::getName() const
 
 void Account::deposit(int _iBalance)
 {
+	if(_iBalance <= 0){
+		throw ExceptionDeposit(_iBalance);
+	}
 	iBalance += _iBalance;
 }
 
 void Account::withraw(int _iBalance)
 {
+	if(_iBalance <= 0){
+		throw ExceptionDeposit(_iBalance);
+	}else if(_iBalance > this->iBalance){
+		throw ExceptionWithraw(_iBalance);
+	}
 	iBalance -= _iBalance;
 }
 

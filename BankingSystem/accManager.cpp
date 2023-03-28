@@ -6,7 +6,7 @@
  */
 
 #include "accManager.h"
-
+#include "exception.h"
 
 #include<iostream>
 
@@ -65,20 +65,20 @@ void AccManager::deposit()
 	int iId, iBalance;
 	cout<<"입금 계좌 ID : ";
 	cin>>iId;
-	for(int i=0; i<cContainer.getElementTotCount(); i++){
-		if(cContainer.getItem(i)->getId() == iId){
-			cout<<"입금 금액 : ";
-			cin >> iBalance;
-			if(iBalance<=0){
-				cout<<"입금 금액은 0보다 커야합니다."<<endl;
-			}else{
+	try{
+		for(int i=0; i<cContainer.getElementTotCount(); i++){
+			if(cContainer.getItem(i)->getId() == iId){
+				cout<<"입금 금액 : ";
+				cin >> iBalance;
 				cContainer.getItem(i)->deposit(iBalance);
 				cout<<"입금 완료"<<endl;
+				return;
 			}
-			return;
+			cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
 		}
+	}catch(ExceptionDeposit& exp){
+		exp.showInfo();
 	}
-	cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
 }
 
 void AccManager::withraw()
@@ -86,22 +86,23 @@ void AccManager::withraw()
 	int iId, iBalance;
 	cout<<"출금 계좌 ID : ";
 	cin>>iId;
-	for(int i=0; i<cContainer.getElementTotCount(); i++){
-		if(cContainer.getItem(i)->getId() == iId){
-			cout<<"출금 금액 : ";
-			cin >> iBalance;
-			if(iBalance<=0){
-				cout<<"출금 금액은 0보다 커야합니다."<<endl;
-			}else if(iBalance > cContainer.getItem(i)->getBalance()){
-				cout<<"잔액이 부족합니다."<<endl;
-			}else{
+	try{
+		for(int i=0; i<cContainer.getElementTotCount(); i++){
+			if(cContainer.getItem(i)->getId() == iId){
+				cout<<"출금 금액 : ";
+				cin >> iBalance;
 				cContainer.getItem(i)->withraw(iBalance);
 				cout<<"출금 완료"<<endl;
+				return;
 			}
-			return;
 		}
+		cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
+	}catch (ExceptionDeposit exp){
+		exp.showInfo();
+	}catch(ExceptionWithraw exp){
+		exp.showInfo();
 	}
-	cout<<"일치하는 계좌 ID("<<iId<<")가 없습니다."<<endl;
+
 }
 
 void AccManager::inquire()
