@@ -11,6 +11,7 @@
 #include<iostream>
 
 using namespace::std;
+
 Account::Account(int _iId, int _iBalance, String _cStrName)
 {
 	this->iId = _iId;
